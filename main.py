@@ -2,14 +2,11 @@ from telethon import TelegramClient, events
 import asyncio
 import os
 
-# Railway Variables
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
+phone = os.getenv("PHONE")
 
-# SADECE SEN
 OWNER_ID = 7051750193
-
-# Grup ID
 GROUP = -1001692874801
 
 client = TelegramClient("session", api_id, api_hash)
@@ -28,14 +25,11 @@ async def spam_sil():
 @client.on(events.NewMessage(pattern="/baslat"))
 async def start_handler(event):
     global running, task
-
     if event.sender_id != OWNER_ID:
         return
-
     if running:
         await event.reply("⚠️ Zaten çalışıyor.")
         return
-
     running = True
     task = asyncio.create_task(spam_sil())
     await event.reply("✅ Başlatıldı.")
@@ -43,21 +37,17 @@ async def start_handler(event):
 @client.on(events.NewMessage(pattern="/durdur"))
 async def stop_handler(event):
     global running, task
-
     if event.sender_id != OWNER_ID:
         return
-
     if not running:
         await event.reply("⚠️ Zaten durmuş.")
         return
-
     running = False
     if task:
         task.cancel()
         task = None
-
     await event.reply("⛔ Durduruldu.")
 
-client.start()
-print("Userbot aktif (sadece sen kontrol edebilirsin)")
+client.start(phone=phone)
+print("Userbot aktif")
 client.run_until_disconnected()
