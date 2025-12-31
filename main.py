@@ -1,15 +1,20 @@
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 import asyncio
 import os
 
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
-phone = os.getenv("PHONE")
+session = os.getenv("SESSION")
 
 OWNER_ID = 7051750193
 GROUP = -1001692874801
 
-client = TelegramClient("session", api_id, api_hash)
+client = TelegramClient(
+    StringSession(session),
+    api_id,
+    api_hash
+)
 
 running = False
 task = None
@@ -48,6 +53,6 @@ async def stop_handler(event):
         task = None
     await event.reply("⛔ Durduruldu.")
 
-client.start(phone=phone)
-print("Userbot aktif")
+client.start()
+print("Userbot aktif (telefon session)")
 client.run_until_disconnected()
